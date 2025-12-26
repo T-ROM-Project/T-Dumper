@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Reset Pins</title>
+<hta:application 
+    id="ResetPinsApp"
+    applicationname="Reset Pins Guide"
+    border="thin"
+    borderstyle="normal"
+    caption="yes"
+    icon=""
+    maximizebutton="yes"
+    minimizebutton="yes"
+    showintaskbar="yes"
+    singleinstance="no"
+    sysmenu="yes"
+    version="1.0"
+    windowstate="normal"
+    innerborder="no"
+    scroll="yes"
+    scrollflat="no"
+    selection="yes"
+    contextmenu="yes"
+    navigable="no"
+>
+
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f9f9f9;
+        color: #333;
+        line-height: 1.6;
+    }
+    
+    .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    h1 {
+        color: #0073aa;
+        margin-bottom: 10px;
+    }
+    
+    h2 {
+        color: #005d88;
+        margin-top: 30px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .content {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+    
+    .text-content {
+        flex: 1;
+        min-width: 300px;
+    }
+    
+    .image-content {
+        flex: 1;
+        min-width: 300px;
+        text-align: center;
+    }
+    
+    img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin: 10px 0;
+    }
+    
+    .device-section {
+        background: #f5f5f5;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px 0;
+    }
+    
+    .footer {
+        margin-top: 40px;
+        text-align: center;
+        font-size: 0.9em;
+        color: #777;
+        border-top: 1px solid #eee;
+        padding-top: 20px;
+    }
+    
+    .warning {
+        background-color: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 4px;
+    }
+</style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Reset Pins</h1>
+            <p>Guide for Timmkoo devices</p>
+        </header>
+        
+        <div class="warning">
+            <strong>Important:</strong> Sometimes MTKclient doesnt recognize it. If it doesnt rcognize it try pushing the reset pin again .
+        </div>
+        
+        <div class="content">
+            <div class="text-content">
+                <div class="device-section">
+                    <h2>On the Q5/Q3E/Q8 & G1/G3:</h2>
+                    <p>Gently push an SIM Ejector Tool or a paperclip until you hear/feel a click.</p>
+                </div>
+                
+                <div class="device-section">
+                    <h2>On the Y1:</h2>
+                    <p>Gently push an SIM Ejector Tool or a paperclip until you hear/feel a click.</p>
+                </div>
+            </div>
+            
+            <div class="image-content">
+                <img src="https://timmkoo.de/wp-content/uploads/2025/09/reset_pin_G_Q_Series-1.jpg" alt="Reset pin location for Q Series">
+                <p>Reset pin location for Q Series devices</p>
+                
+                <img src="https://timmkoo.de/wp-content/uploads/2025/09/Screenshot-2025-09-20-231113.png" alt="Reset pin location for Y1">
+                <p>Reset pin location for Y1 device</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Please close this tab when you are done</p>
+        </div>
+    </div>
+
+    <script language="JavaScript">
+        // Simple HTA-specific script if needed
+        window.onload = function() {
+            document.title = "Reset Pin";
+            resizeTo(1000, 700); // Set initial window size
+        }
+    </script>
+</body>
+</html>
