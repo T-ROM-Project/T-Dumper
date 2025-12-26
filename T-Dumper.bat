@@ -56,6 +56,7 @@ set  "RP=%FILETEMP%\RP.hta"
 set "MTKCLIOUT=%MTKCLI%\mtkclient-main\output"
 set "devchoice=%SAVEDATA%\enable.txt"
 set "NOCONFIG=Not yet configured"
+set "vscodeexe=%FILETEMP%\setup.exe"
 :: Logo
 echo TTTTTTT   RRRRRR   OOOOOO   M     M  
 echo    T      R     R  O    O   MM   MM  
@@ -82,6 +83,38 @@ attrib.exe +h +s "%SCRIPTS%"
 attrib.exe +h +s "%FILETEMP%"
 cls
 echo Done
+if not exist "%FILETEMP%\mtkdriv.exe" (
+    echo Downloading Resources..
+    powershell.exe -NoLogo -NoProfile -Command "Invoke-WebRequest -Uri '%BASEURL%/DriverInstall.exe' -OutFile '%FILETEMP%\mtkdriv.exe'" >nul 2>&1
+    cls
+    goto Driverexist
+)else (
+echo Downloading Resources..
+timeout /t 1 >nul 
+cls
+goto Driverexist 
+)
+:Driverexist
+if not exist "%FILETEMP%\UsbDk.msi" (
+if "%PROCESSOR_ARCHITECTURE%"=="AMD64" goto 64
+if not "%PROCESSOR_ARCHITEW6432%"=="" goto 64
+goto 32
+:64
+echo Downloading Resources...
+powershell.exe -NoLogo -NoProfile -Command "Invoke-WebRequest -Uri 'https://github.com/daynix/UsbDk/releases/download/v1.00-22/UsbDk_1.0.22_x64.msi' -OutFile '%FILETEMP%\UsbDk.msi'" >nul 2>&1 
+cls
+goto z
+:32
+echo Downloading Resources...
+powershell.exe -NoLogo -NoProfile -Command "Invoke-WebRequest -Uri 'https://github.com/daynix/UsbDk/releases/download/v1.00-22/UsbDk_1.0.22_x86.msi' -OutFile '%FILETEMP%\UsbDk.msi'" >nul 2>&1 
+cls
+goto z
+:z
+goto Driverexist1
+)else (
+goto Driverexist1 
+)
+:Driverexist1
 cls
 echo Checking if Python is installed ...
 python --version >nul 2>&1
@@ -124,6 +157,7 @@ mklink "%SystemRoot%\System32\python3.exe" "%pythondir%\python.exe"
 timeout /t 3 >nul
 cls 
 echo Done
+cls
 timeout /t 2 >nul
 echo Downloading and extracting extra resources ...
 if not exist "%MTKCLI%\mtkclient-main\mtk.py" (
@@ -158,20 +192,22 @@ if not exist "%USBCHECK%\UsbDk.sys" (
     echo USBDKDRIVER: NO
     echo N >"%FILETEMP%\usbdkdriv.txt"
    timeout /t 2 >nul 
-   CALL "%SCRIPTS%\drivinst.bat"
+   goto go2
    
 )else (
     echo USBDKDRIVER: YES
     echo Y >"%FILETEMP%\usbdkdriv.txt"
   timeout /t 2 >nul 
-  CALL "%SCRIPTS%\drivinst.bat"
+  goto go2
 )
+
+:go2
+cls
 set "tempFile1=%FILETEMP%\mtkdriv.txt"
 set "tempFile2=%FILETEMP%\usbdkdriv.txt"
 
 for /f "usebackq delims=" %%a in ("%tempFile1%") do set "inst1=%%a"
 for /f "usebackq delims=" %%a in ("%tempFile2%") do set "inst2=%%a"
-
 set "inst1=%inst1: =%"
 set "inst2=%inst2: =%"
 
@@ -214,11 +250,39 @@ exit
 cls
 echo Done
 timeout /t 3 >nul
+if "%~1"=="1" (
+    goto vscodesuccess
+)
+cls
+echo Downloading and installing VS Buildtools 
+winget uninstall --id Microsoft.VisualStudio.2022.BuildTools 2>nul
+winget uninstall --id Microsoft.VisualStudio.2019.BuildTools 2>nul 
+winget uninstall --id Microsoft.VisualStudio.2017.BuildTools 2>nul 
+winget install --id Microsoft.VisualStudio.2022.BuildTools --override "--passive --wait --add Microsoft.VisualStudio.Workload.VCTools;includeRecommended --add Microsoft.VisualStudio.Component.Windows10SDK.19041" --accept-package-agreements --accept-source-agreements --wait --disable-interactivity 
+echo Done 
+timeout /t 2 >nul
+cls
+Installing Chocolatey for Openssl ...
+del "C:\ProgramData\chocolatey" /q
+powershell -Command "Set-ExecutionPolicy Bypass -Scope Process -Force" >nul 2>&1
+powershell -Command "[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))"
+echo Done 
+timeout /t 2 >nul
+cls 
+echo Installing Openssl ...
+choco install openssl -y
+echo Done
+timeout /t 2 >nul
+cls
+echo Rebooting Script ...
+timeout /t 2 >nul
+start cmd.exe /c "powershell -WindowStyle Minimized -Command "Start-Sleep -Seconds 0" && timeout /t 3 >nul && start %scriptPath%T-Dumper.bat 1 "
+exit
+
+:vscodesuccess
 cls
 echo Setting mtkclient up ...
 cd %MTKCLI%\mtkclient-main
-pip3 install -r requirements.txt
-cls
-echo Done 
+pip3 install -r requirements.txt && echo. || echo OH that dont work && pause
 timeout /t 2 >nul
 pause
